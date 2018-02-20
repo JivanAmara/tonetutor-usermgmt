@@ -59,7 +59,7 @@ class UserProfile(models.Model):
                     and SubscriptionHistory.objects.filter(user=instance).count() == 0:
                     today = datetime.datetime.today()
                     SubscriptionHistory.objects.create(
-                        user=instance, stripe_confirm='free', begin_date=today, end_date=today,
+                        user=instance, payment_id='free', begin_date=today, end_date=today,
                         payment_amount=0
                     )
             else:
@@ -87,7 +87,7 @@ class SubscriptionHistory(models.Model):
     @classmethod
     def expires(cls, user):
         user_subscriptions = SubscriptionHistory.objects.values('end_date').filter(user=user)\
-            .exclude(stripe_confirm=None).order_by('-end_date')
+            .exclude(payment_id=None).order_by('-end_date')
         if len(user_subscriptions) == 0:
             expires = datetime.date(datetime.MAXYEAR, 1, 1)
         else:
@@ -100,7 +100,7 @@ class SubscriptionHistory(models.Model):
         # Returns true if the user has a subscription with an end date after today or
         #    up to 1 day before today.
         user_history = SubscriptionHistory.objects.values('end_date')\
-            .filter(user=user).exclude(stripe_confirm=None).order_by('-end_date')
+            .filter(user=user).exclude(payment_id=None).order_by('-end_date')
         dttoday = datetime.datetime.today()
         today = datetime.date(year=dttoday.year, month=dttoday.month, day=dttoday.day)
         if len(user_history) == 0:
