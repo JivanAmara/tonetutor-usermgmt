@@ -12,6 +12,10 @@ setup(
     author="Jivan Amara",
     author_email="Development@JivanAmara.net",
     packages=['usermgmt', 'usermgmt.migrations'],
+    include_package_data=True,
+    package_data={
+        'usermgmt': ['templates/usermgmt/user_profile.html'],
+    },
     description=README,
     long_description=README,
     classifiers=[
